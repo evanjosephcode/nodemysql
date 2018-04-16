@@ -15,13 +15,12 @@ var connection = mysql.createConnection({
 connection.connect(function (err) {
   if (err) throw err;
   printItems();
-  createOrder();
 });
 
 function printItems() {
   queryInventory = "SELECT * FROM products";
 
-  connection.query(queryInventory, function (err, res) {
+  connection.query(queryInventory, function (err, data) {
     if (err)
       return console.log(err);
 
@@ -33,13 +32,16 @@ function printItems() {
       inventory += 'Price:  ' + data[i].price + ' ** \n';
 
       console.log(inventory);
+      // // console.log("stuff");
     }
+
+    createOrder();
   })
 }
 
 function createOrder() {
   inquirer.prompt([{
-      type = "input",
+      type: "input",
       name: "id",
       message: "please enter the id of the product you would like to buy"
     },
@@ -49,16 +51,14 @@ function createOrder() {
       message: "how many units of the product would you like to buy?"
     }
   ]).then(function (input) {
-
-    var inventory = "SELECT * FROM products";
+    var inventory = "SELECT * FROM products WHERE ?";
     var itemID = input.id;
     var quantity = input.quantity;
 
 
-    connection.query(inventory, {
+   let query = connection.query(inventory, {
         item_id: itemID
-      }),
-      function (err, data) {
+      }, function (err, data) {
         if (err) throw err;
 
         if (data.length === 0) {
@@ -70,9 +70,13 @@ function createOrder() {
           if (quantity <= itemInfo.stock_quantity) {
             console.log("thanks for shopping");
 
-            var updateInventory = "UPDATE products SET stock_quantity= " + (itemInfo.stock_quantity - quantity) + " WHERE item_id = " + item;
+            var updateInventory = "UPDATE products SET ? where ?" 
+            // + (itemInfo.stock_quantity - quantity) + " WHERE item_id = " + itemID;
 
-            connection.query(updateInventory, function (err, data) {
+            connection.query(updateInventory, [{
+              stock_quantity: itemInfo.stock_quantity - quantity},
+              {item_id: itemID}
+            ], function (err, data) {
               if (err) throw err;
               console.log("Enjoy your purchase.  Your total is $" + (itemInfo.price * quantity) + "."); //calculates total
 
@@ -84,6 +88,8 @@ function createOrder() {
             printItems();
           }
         };
-      }
+      });
+
+      // console.log(query);
   });
 }
