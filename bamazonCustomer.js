@@ -29,7 +29,7 @@ function printItems() {
       inventory = ' ';
       inventory += 'Item ID Number: ' + data[i].item_id + ' ** ';
       inventory += 'Product Name: ' + data[i].product_name + ' ** ';
-      inventory += 'Price:  ' + data[i].price + ' ** \n';
+      inventory += 'Price:  $' + data[i].price + ' ** \n';
 
       console.log(inventory);
       // // console.log("stuff");
@@ -56,40 +56,58 @@ function createOrder() {
     var quantity = input.quantity;
 
 
-   let query = connection.query(inventory, {
-        item_id: itemID
-      }, function (err, data) {
-        if (err) throw err;
+    let query = connection.query(inventory, {
+      item_id: itemID
+    }, function (err, data) {
+      if (err) throw err;
 
-        if (data.length === 0) {
-          console.log("please input a valid Item ID");
-          printItems();
+      if (data.length === 0) {
+
+        console.log(`
+        
+        
+        please input a valid Item ID
+        
+        
+        `);
+        printItems();
+      } else {
+        var itemInfo = data[0];
+
+        if (quantity <= itemInfo.stock_quantity) {
+          console.log("thanks for shopping");
+
+          var updateInventory = "UPDATE products SET ? where ?"
+          // + (itemInfo.stock_quantity - quantity) + " WHERE item_id = " + itemID;
+
+          connection.query(updateInventory, [{
+              stock_quantity: itemInfo.stock_quantity - quantity
+            },
+            {
+              item_id: itemID
+            }
+          ], function (err, data) {
+            if (err) throw err;
+            console.log("Enjoy your purchase.  Your total is $" + (itemInfo.price * quantity) + "."); //calculates total
+            // console.log(itemInfo.stock_quantity);
+            connection.end();
+          })
+
         } else {
-          var itemInfo = data[0];
+          console.log(`
+          
+          
+          `);
+          console.log("Sorry we cannot fullfill your order we only have " + itemInfo.stock_quantity + " units of " + itemInfo.product_name + " left");
+          console.log(`
+            
+            
+            `);
+          printItems();
+        }
+      };
+    });
 
-          if (quantity <= itemInfo.stock_quantity) {
-            console.log("thanks for shopping");
-
-            var updateInventory = "UPDATE products SET ? where ?" 
-            // + (itemInfo.stock_quantity - quantity) + " WHERE item_id = " + itemID;
-
-            connection.query(updateInventory, [{
-              stock_quantity: itemInfo.stock_quantity - quantity},
-              {item_id: itemID}
-            ], function (err, data) {
-              if (err) throw err;
-              console.log("Enjoy your purchase.  Your total is $" + (itemInfo.price * quantity) + "."); //calculates total
-
-              connection.end();
-            })
-
-          } else {
-            console.log("Sorry we cannot fullfill your order we only have " + itemInfo.stock_quantity + "units of that left");
-            printItems();
-          }
-        };
-      });
-
-      // console.log(query);
+    // console.log(query);
   });
 }
