@@ -147,7 +147,7 @@ function addProduct() {
         },
         {
             name: "price",
-            message: "please enter the price in xx.xx (do not add dollar sign)"
+            message: "please enter the price including cents (do not add dollar sign)"
         },
         {
             name: "quantity",
