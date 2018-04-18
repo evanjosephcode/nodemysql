@@ -16,7 +16,7 @@ also requires mySQL to be run locally so you can access the database<br>
 
 **... but what specifically can you do?**<br><br>
 **if the customer**:<br>
-*pull up inventory, purchase the product desired, and specify quality<br>
+*pull up inventory, purchase the product desired, and specify quantity<br>
 *it will also give you the total of your order after checkout<br><br>
 **if the manager**:<br>
 *view inventory, low inventory (queries qty less than 100), add qty of existing product, add new product
