@@ -124,9 +124,11 @@ function addInventory() {
                     item_id: itemID
                 }
             ], function (err, data) {
-                console.log(quantity);
-                console.log(itemInfo.stock_quantity);
-                console.log("The new amount of " + itemInfo.product_name + " is" + itemInfo.stock_quantity + " units");
+                connection.query(inventory, [{
+                    item_id: itemID
+                }], function (err, data) {
+                    console.log("The product: " + data[0].product_name + " now has " + data[0].stock_quantity + " units in inventory.");
+                })
             })
         });
     });
