@@ -1,5 +1,4 @@
 var mysql = require("mysql");
-// need npm inquirer for prompts 
 var inquirer = require("inquirer");
 
 var connection = mysql.createConnection({
@@ -32,7 +31,6 @@ function printItems() {
       inventory += 'Price:  $' + data[i].price + ' ** \n';
 
       console.log(inventory);
-      // // console.log("stuff");
     }
 
     createOrder();
@@ -41,12 +39,10 @@ function printItems() {
 
 function createOrder() {
   inquirer.prompt([{
-      type: "input",
       name: "id",
       message: "please enter the id of the product you would like to buy"
     },
     {
-      type: "input",
       name: "quantity",
       message: "how many units of the product would you like to buy?"
     }
@@ -78,7 +74,6 @@ function createOrder() {
           console.log("thanks for shopping");
 
           var updateInventory = "UPDATE products SET ? where ?"
-          // + (itemInfo.stock_quantity - quantity) + " WHERE item_id = " + itemID;
 
           connection.query(updateInventory, [{
               stock_quantity: itemInfo.stock_quantity - quantity
@@ -88,8 +83,7 @@ function createOrder() {
             }
           ], function (err, data) {
             if (err) throw err;
-            console.log("Enjoy your purchase.  Your total is $" + (itemInfo.price * quantity) + "."); //calculates total
-            // console.log(itemInfo.stock_quantity);
+            console.log("Enjoy your purchase.  Your total is $" + (itemInfo.price * quantity) + ".");
             connection.end();
           })
 
