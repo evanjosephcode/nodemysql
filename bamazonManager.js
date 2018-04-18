@@ -39,7 +39,8 @@ function managerOptions() {
                 addInventory();
                 break;
             case "Add New Product":
-                console.log("addnewproduct");
+                console.log("");
+                addProduct();
                 break;
         }
     })
