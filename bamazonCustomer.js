@@ -11,6 +11,28 @@ var connection = mysql.createConnection({
   database: "bamazon"
 });
 
+function reinitiate() {
+  inquirer.prompt([{
+    type: "list",
+    name: "selection",
+    message: "what do you want to do",
+    choices: ["shop again",
+      "sign out of Amazon / end connection",
+    ]
+  }, ]).then(function (input) {
+    switch (input.selection) {
+      case "shop again":
+        console.log("");
+        printItems();
+        break;
+      case "sign out of Amazon / end connection":
+        console.log("");
+        connection.end();
+        break;
+    }
+  })
+}
+
 connection.connect(function (err) {
   if (err) throw err;
   printItems();
@@ -83,8 +105,8 @@ function createOrder() {
             }
           ], function (err, data) {
             if (err) throw err;
-            console.log("Enjoy your purchase.  Your total is $" + (itemInfo.price * quantity).toFixed(2) + ".");
-            connection.end();
+            console.log("Enjoy your purchase.  Your total is $" + (itemInfo.price * quantity).toFixed(2) + ".\n");
+            reinitiate();
           })
 
         } else {
@@ -101,7 +123,5 @@ function createOrder() {
         }
       };
     });
-
-    // console.log(query);
   });
 }

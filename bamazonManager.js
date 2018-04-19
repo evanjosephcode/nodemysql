@@ -99,6 +99,13 @@ function lowInventory() {
 }
 
 function addInventory() {
+    validateNum = function (input) {
+        if (isNaN(parseFloat(input)) ||
+            input > 100)
+            return "Input a valid number";
+        return true;
+    }
+
     inquirer.prompt([{
             type: "input",
             name: "id",
@@ -107,7 +114,8 @@ function addInventory() {
         {
             type: "input",
             name: "quantityadded",
-            message: "how many units of the product would you like to add?"
+            message: "how many units of the product would you like to add?",
+            validate: validateNum
         }
     ]).then(function (input) {
         var inventory = "SELECT * FROM products WHERE ?";
@@ -138,7 +146,7 @@ function addInventory() {
                     console.log("");
                     console.log("The product: " + data[0].product_name + " now has " + data[0].stock_quantity + " units in inventory.");
                     console.log("");
-                    managerOptions();   
+                    managerOptions();
                 })
             })
         });
@@ -179,7 +187,7 @@ function addProduct() {
         )
         console.log("you've successfully added: " + input.productname + " to inventory");
         console.log("");
-        managerOptions(); 
+        managerOptions();
 
     })
 }
