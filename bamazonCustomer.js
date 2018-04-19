@@ -83,7 +83,7 @@ function createOrder() {
             }
           ], function (err, data) {
             if (err) throw err;
-            console.log("Enjoy your purchase.  Your total is $" + (itemInfo.price * quantity) + ".");
+            console.log("Enjoy your purchase.  Your total is $" + (itemInfo.price * quantity).toFixed(2) + ".");
             connection.end();
           })
 

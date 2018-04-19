@@ -22,7 +22,8 @@ function managerOptions() {
         choices: ["View Products for Sale",
             "View Low Inventory",
             "Add to inventory",
-            "Add New Product"
+            "Add New Product",
+            "Disconnect Manager View"
         ]
     }, ]).then(function (input) {
         switch (input.selection) {
@@ -41,6 +42,9 @@ function managerOptions() {
             case "Add New Product":
                 console.log("");
                 addProduct();
+                break;
+            case "Disconnect Manager View":
+                connection.end();
                 break;
         }
     })
@@ -64,8 +68,10 @@ function printItems() {
             inventory += 'Quantity: ' + data[i].stock_quantity + '\n';
 
             console.log(inventory);
-            // managerOptions();
         }
+        console.log("");
+        managerOptions();
+
     })
 }
 
@@ -85,8 +91,10 @@ function lowInventory() {
             inventory += 'Quantity: ' + data[i].stock_quantity + '\n';
 
             console.log(inventory);
-            // managerOptions();
         }
+        console.log("");
+        managerOptions();
+
     })
 }
 
@@ -114,7 +122,7 @@ function addInventory() {
 
             var itemInfo = data[0];
             var newSum = parseInt(quantity) + parseInt(itemInfo.stock_quantity);
-            console.log(itemInfo);
+            // console.log(itemInfo);
 
 
             connection.query(updateInventory, [{
@@ -127,11 +135,15 @@ function addInventory() {
                 connection.query(inventory, [{
                     item_id: itemID
                 }], function (err, data) {
+                    console.log("");
                     console.log("The product: " + data[0].product_name + " now has " + data[0].stock_quantity + " units in inventory.");
+                    console.log("");
+                    managerOptions();   
                 })
             })
         });
     });
+
 };
 
 function addProduct() {
@@ -166,6 +178,8 @@ function addProduct() {
             },
         )
         console.log("you've successfully added: " + input.productname + " to inventory");
+        console.log("");
+        managerOptions(); 
 
     })
 }

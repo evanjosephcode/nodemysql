@@ -8,10 +8,15 @@ requires use of inquirer and mysql npm packages to work.<br>
 also requires MySQL to be run locally so you can access the database<br>
 (if using Sequel Pro on Mac: 'mysql.server start' in Terminal to ensure the process has started)
 
+**if you would like a visual cue of the functionality in action:**<br>
+check out bamazonCustomer_in_use.png and bamazonManager_in_use.png in /screenshots<br>
+
 **instructions:**<br>
 'node bamazonCustomer.js'<br>
 -OR-<br>
 'node bamazonManager.js'<br>
+are the key commands to initate the app<br>
+
  
 
 **... but what specifically can you do?**<br><br>
