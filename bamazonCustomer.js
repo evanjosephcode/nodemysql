@@ -79,7 +79,7 @@ function createOrder() {
     }, function (err, data) {
       if (err) throw err;
 
-      if (data.length === 0) {
+      if (!data.length) {
 
         console.log(`
         

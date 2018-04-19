@@ -21,7 +21,7 @@ function managerOptions() {
         message: "what do you want to do",
         choices: ["View Products for Sale",
             "View Low Inventory",
-            "Add to inventory",
+            "Add to Inventory",
             "Add New Product",
             "Disconnect Manager View"
         ]
@@ -35,7 +35,7 @@ function managerOptions() {
                 console.log("");
                 lowInventory();
                 break;
-            case "Add to inventory":
+            case "Add to Inventory":
                 console.log("");
                 addInventory();
                 break;
@@ -128,33 +128,45 @@ function addInventory() {
         }, function (err, data) {
             if (err) throw err;
 
-            var itemInfo = data[0];
-            var newSum = parseInt(quantity) + parseInt(itemInfo.stock_quantity);
-            // console.log(itemInfo);
+            if (!data.length) {
+                console.log("\nPlease enter a valid item ID\n");
+                addInventory();
+            } else {
 
+                var itemInfo = data[0];
+                var newSum = parseInt(quantity) + parseInt(itemInfo.stock_quantity);
 
-            connection.query(updateInventory, [{
-                    stock_quantity: newSum
-                },
-                {
-                    item_id: itemID
-                }
-            ], function (err, data) {
-                connection.query(inventory, [{
-                    item_id: itemID
-                }], function (err, data) {
-                    console.log("");
-                    console.log("The product: " + data[0].product_name + " now has " + data[0].stock_quantity + " units in inventory.");
-                    console.log("");
-                    managerOptions();
+                connection.query(updateInventory, [{
+                        stock_quantity: newSum
+                    },
+                    {
+                        item_id: itemID
+                    }
+                ], function (err, data) {
+                    connection.query(inventory, [{
+                        item_id: itemID
+                    }], function (err, data) {
+                        console.log("");
+                        console.log("The product: " + data[0].product_name + " now has " + data[0].stock_quantity + " units in inventory.");
+                        console.log("");
+                        managerOptions();
+                    })
                 })
-            })
+            }
         });
     });
 
 };
 
 function addProduct() {
+
+    validateNum = function (input) {
+        if (isNaN(parseFloat(input)) ||
+            input > 100)
+            return "Input a valid number";
+        return true;
+    }
+
     inquirer.prompt([{
             name: "itemid",
             message: "please enter the item id of the new product you would like to add to inventory"
@@ -169,11 +181,13 @@ function addProduct() {
         },
         {
             name: "price",
-            message: "please enter the price including cents (do not add dollar sign)"
+            message: "please enter the price including cents (do not add dollar sign)",
+            validate: validateNum
         },
         {
             name: "quantity",
-            message: "how many units of the product are you adding?"
+            message: "how many units of the product are you adding?",
+            validate: validateNum
         }
     ]).then(function (input) {
         let query = connection.query(
